@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initContactForm();
   initBackToTop();
   initYear();
+  initDateLimit();
 });
 
 /* ---------- Mobile nav ---------- */
@@ -219,6 +220,18 @@ function initBackToTop() {
   btn.addEventListener('click', () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   });
+}
+
+/* ---------- Restrict appointment date picker to today onward ---------- */
+function initDateLimit() {
+  const dateInput = document.getElementById('date');
+  if (!dateInput) return;
+
+  const today = new Date();
+  const yyyy = today.getFullYear();
+  const mm = String(today.getMonth() + 1).padStart(2, '0');
+  const dd = String(today.getDate()).padStart(2, '0');
+  dateInput.setAttribute('min', `${yyyy}-${mm}-${dd}`);
 }
 
 /* ---------- Footer year ---------- */
