@@ -756,7 +756,30 @@ p { color: var(--color-text-muted); }
   background: #fff;
   flex-shrink: 0;
 }
-.payment-card__body .btn { flex: 1; min-width: 200px; }
+
+.upi-app-buttons {
+  flex: 1;
+  min-width: 220px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.upi-app-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: #fff;
+  border: 1.5px solid var(--color-primary);
+  color: var(--color-primary-dark);
+  border-radius: var(--radius-sm);
+  padding: 12px 10px;
+  font-weight: 700;
+  font-size: 0.85rem;
+  transition: var(--transition);
+}
+.upi-app-btn i { font-size: 1.05rem; }
+.upi-app-btn:hover { background: var(--color-primary); color: #fff; transform: translateY(-2px); }
 
 .payment-card__note { margin-top: 16px; font-size: 0.8rem; color: var(--color-text-muted); }
 

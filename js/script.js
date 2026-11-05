@@ -308,23 +308,34 @@ function initPayment() {
   const paymentBlock = document.getElementById('paymentBlock');
   const noPaymentNote = document.getElementById('noPaymentNote');
   const qrImg = document.getElementById('upiQrImg');
-  const payBtn = document.getElementById('upiPayBtn');
-  if (!concernSelect || !paymentBlock || !noPaymentNote || !qrImg || !payBtn) return;
+  const gpayBtn = document.getElementById('upiBtnGpay');
+  const phonepeBtn = document.getElementById('upiBtnPhonepe');
+  const paytmBtn = document.getElementById('upiBtnPaytm');
+  const genericBtn = document.getElementById('upiBtnGeneric');
+  if (!concernSelect || !paymentBlock || !noPaymentNote || !qrImg || !gpayBtn || !phonepeBtn || !paytmBtn || !genericBtn) return;
 
   const UPI_ID = '8075307375@sib';
   const PAYEE_NAME = 'Otolarynx ENT Care';
   const AMOUNT = '399';
   const NOTE = 'Consultation Fee - Otolarynx ENT Care';
 
-  const upiUri =
-    `upi://pay?pa=${encodeURIComponent(UPI_ID)}` +
+  const params =
+    `pa=${encodeURIComponent(UPI_ID)}` +
     `&pn=${encodeURIComponent(PAYEE_NAME)}` +
     `&am=${encodeURIComponent(AMOUNT)}` +
     `&cu=INR` +
     `&tn=${encodeURIComponent(NOTE)}`;
 
-  payBtn.href = upiUri;
-  qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(upiUri)}`;
+  const genericUri = `upi://pay?${params}`;
+
+  // Each UPI app registers its own URI scheme — using these directly avoids
+  // the OS/another app (e.g. WhatsApp) intercepting the generic upi:// link.
+  gpayBtn.href = `tez://upi/pay?${params}`;
+  phonepeBtn.href = `phonepe://pay?${params}`;
+  paytmBtn.href = `paytmmp://pay?${params}`;
+  genericBtn.href = genericUri;
+
+  qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(genericUri)}`;
 
   const updatePaymentVisibility = () => {
     const isFollowUp = concernSelect.value === 'Follow-up Visit';

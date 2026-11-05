@@ -491,11 +491,14 @@
             </div>
             <div class="payment-card__body">
               <img id="upiQrImg" class="payment-card__qr" alt="Scan with any UPI app to pay ₹399" />
-              <a id="upiPayBtn" href="#" class="btn btn--primary btn--block">
-                <i class="fa-brands fa-google-pay"></i> Pay ₹399 via UPI App
-              </a>
+              <div class="upi-app-buttons">
+                <a id="upiBtnGpay" href="#" class="upi-app-btn"><i class="fa-brands fa-google-pay"></i> Google Pay</a>
+                <a id="upiBtnPhonepe" href="#" class="upi-app-btn"><i class="fa-solid fa-mobile-screen-button"></i> PhonePe</a>
+                <a id="upiBtnPaytm" href="#" class="upi-app-btn"><i class="fa-solid fa-wallet"></i> Paytm</a>
+                <a id="upiBtnGeneric" href="#" class="upi-app-btn"><i class="fa-solid fa-qrcode"></i> Other UPI App</a>
+              </div>
             </div>
-            <p class="payment-card__note">On mobile, tap the button to open your UPI app. On desktop, scan the QR code. Please keep the payment confirmation screenshot handy for your visit.</p>
+            <p class="payment-card__note">On mobile, tap your UPI app above. On desktop, scan the QR code. Please keep the payment confirmation screenshot handy for your visit.</p>
           </div>
         </div>
         <div class="payment-block payment-block--free" id="noPaymentNote" style="display:none;">
