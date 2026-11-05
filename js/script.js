@@ -165,7 +165,7 @@ function initContactForm() {
   const note = document.getElementById('formNote');
   if (!form || !note) return;
 
-  form.addEventListener('submit', (e) => {
+  form.addEventListener('submit', async (e) => {
     e.preventDefault();
 
     if (!form.checkValidity()) {
@@ -175,13 +175,35 @@ function initContactForm() {
       return;
     }
 
-    // NOTE: This demo has no backend configured. Wire this up to your
-    // clinic's booking system, email service, or form endpoint (e.g.
-    // Formspree, a serverless function, or your EHR's API) to actually
-    // receive appointment requests.
-    note.textContent = 'Thank you! Your appointment request has been received — our team will contact you shortly to confirm.';
-    note.classList.add('success');
-    form.reset();
+    const submitBtn = form.querySelector('button[type="submit"]');
+    const originalBtnText = submitBtn.innerHTML;
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Sending...';
+    note.classList.remove('success', 'error');
+    note.textContent = '';
+
+    try {
+      const response = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify(Object.fromEntries(new FormData(form))),
+      });
+      const result = await response.json();
+
+      if (result.success) {
+        note.textContent = 'Thank you! Your appointment request has been received — our team will contact you shortly to confirm.';
+        note.classList.add('success');
+        form.reset();
+      } else {
+        throw new Error(result.message || 'Submission failed');
+      }
+    } catch (err) {
+      note.textContent = 'Something went wrong sending your request. Please call us directly at 9496936034.';
+      note.classList.add('error');
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = originalBtnText;
+    }
   });
 }
 

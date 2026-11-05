@@ -623,6 +623,7 @@ p { color: var(--color-text-muted); }
 }
 .form-note { margin-top: 16px; font-size: 0.9rem; font-weight: 600; min-height: 1.2em; }
 .form-note.success { color: var(--color-primary-dark); }
+.form-note.error { color: #c23b3b; }
 
 .contact__info { display: flex; flex-direction: column; gap: 22px; }
 .info-card {
