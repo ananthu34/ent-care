@@ -16,6 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initScrollProgress();
   initParallax();
   initRipple();
+  initPayment();
 });
 
 const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -299,6 +300,40 @@ function initDateLimit() {
   const mm = String(today.getMonth() + 1).padStart(2, '0');
   const dd = String(today.getDate()).padStart(2, '0');
   dateInput.setAttribute('min', `${yyyy}-${mm}-${dd}`);
+}
+
+/* ---------- UPI consultation fee payment ---------- */
+function initPayment() {
+  const concernSelect = document.getElementById('concern');
+  const paymentBlock = document.getElementById('paymentBlock');
+  const noPaymentNote = document.getElementById('noPaymentNote');
+  const qrImg = document.getElementById('upiQrImg');
+  const payBtn = document.getElementById('upiPayBtn');
+  if (!concernSelect || !paymentBlock || !noPaymentNote || !qrImg || !payBtn) return;
+
+  const UPI_ID = '8075307375@sib';
+  const PAYEE_NAME = 'Otolarynx ENT Care';
+  const AMOUNT = '399';
+  const NOTE = 'Consultation Fee - Otolarynx ENT Care';
+
+  const upiUri =
+    `upi://pay?pa=${encodeURIComponent(UPI_ID)}` +
+    `&pn=${encodeURIComponent(PAYEE_NAME)}` +
+    `&am=${encodeURIComponent(AMOUNT)}` +
+    `&cu=INR` +
+    `&tn=${encodeURIComponent(NOTE)}`;
+
+  payBtn.href = upiUri;
+  qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(upiUri)}`;
+
+  const updatePaymentVisibility = () => {
+    const isFollowUp = concernSelect.value === 'Follow-up Visit';
+    paymentBlock.style.display = isFollowUp ? 'none' : '';
+    noPaymentNote.style.display = isFollowUp ? '' : 'none';
+  };
+
+  concernSelect.addEventListener('change', updatePaymentVisibility);
+  updatePaymentVisibility();
 }
 
 /* ---------- Footer year ---------- */

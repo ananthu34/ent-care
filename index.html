@@ -480,6 +480,27 @@
             <option>Other</option>
           </select>
         </div>
+        <div class="payment-block" id="paymentBlock">
+          <div class="payment-card">
+            <div class="payment-card__head">
+              <i class="fa-solid fa-indian-rupee-sign"></i>
+              <div>
+                <strong>₹399 — First-Time Consultation Fee</strong>
+                <span>Pay via any UPI app to confirm your slot</span>
+              </div>
+            </div>
+            <div class="payment-card__body">
+              <img id="upiQrImg" class="payment-card__qr" alt="Scan with any UPI app to pay ₹399" />
+              <a id="upiPayBtn" href="#" class="btn btn--primary btn--block">
+                <i class="fa-brands fa-google-pay"></i> Pay ₹399 via UPI App
+              </a>
+            </div>
+            <p class="payment-card__note">On mobile, tap the button to open your UPI app. On desktop, scan the QR code. Please keep the payment confirmation screenshot handy for your visit.</p>
+          </div>
+        </div>
+        <div class="payment-block payment-block--free" id="noPaymentNote" style="display:none;">
+          <i class="fa-solid fa-circle-check"></i> No payment required for follow-up visits.
+        </div>
         <div class="form-group">
           <label for="message">Additional Message (optional)</label>
           <textarea id="message" name="message" rows="4" placeholder="Briefly describe your symptoms or concern..."></textarea>
