@@ -13,7 +13,12 @@ document.addEventListener('DOMContentLoaded', () => {
   initBackToTop();
   initYear();
   initDateLimit();
+  initScrollProgress();
+  initParallax();
+  initRipple();
 });
+
+const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 /* ---------- Mobile nav ---------- */
 function initMobileNav() {
@@ -58,10 +63,22 @@ function initScrollSpy() {
   sections.forEach((section) => observer.observe(section));
 }
 
-/* ---------- Reveal-on-scroll animation ---------- */
+/* ---------- Reveal-on-scroll animation (staggered by sibling group) ---------- */
 function initReveal() {
   const items = document.querySelectorAll('[data-reveal]');
   if (!items.length) return;
+
+  const groups = new Map();
+  items.forEach((item) => {
+    const parent = item.parentElement;
+    if (!groups.has(parent)) groups.set(parent, []);
+    groups.get(parent).push(item);
+  });
+  groups.forEach((group) => {
+    group.forEach((item, i) => {
+      item.style.transitionDelay = prefersReducedMotion ? '0ms' : `${Math.min(i * 90, 450)}ms`;
+    });
+  });
 
   const observer = new IntersectionObserver(
     (entries) => {
@@ -76,6 +93,56 @@ function initReveal() {
   );
 
   items.forEach((item) => observer.observe(item));
+}
+
+/* ---------- Scroll progress bar ---------- */
+function initScrollProgress() {
+  const bar = document.getElementById('scrollProgress');
+  if (!bar) return;
+
+  window.addEventListener(
+    'scroll',
+    () => {
+      const scrollable = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = scrollable > 0 ? (window.scrollY / scrollable) * 100 : 0;
+      bar.style.width = `${progress}%`;
+    },
+    { passive: true }
+  );
+}
+
+/* ---------- Hero background parallax drift ---------- */
+function initParallax() {
+  if (prefersReducedMotion) return;
+  const shapes = document.querySelectorAll('.hero__bg-shape');
+  if (!shapes.length) return;
+
+  window.addEventListener(
+    'scroll',
+    () => {
+      const y = window.scrollY;
+      shapes.forEach((shape, i) => {
+        shape.style.transform = `translateY(${y * (0.12 + i * 0.06)}px)`;
+      });
+    },
+    { passive: true }
+  );
+}
+
+/* ---------- Button ripple feedback ---------- */
+function initRipple() {
+  if (prefersReducedMotion) return;
+  document.querySelectorAll('.btn').forEach((btn) => {
+    btn.addEventListener('click', (e) => {
+      const rect = btn.getBoundingClientRect();
+      const ripple = document.createElement('span');
+      ripple.className = 'ripple';
+      ripple.style.left = `${e.clientX - rect.left}px`;
+      ripple.style.top = `${e.clientY - rect.top}px`;
+      btn.appendChild(ripple);
+      ripple.addEventListener('animationend', () => ripple.remove());
+    });
+  });
 }
 
 /* ---------- Animated stat counters ---------- */
